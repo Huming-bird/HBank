@@ -15,10 +15,22 @@ class Contact(BaseModel, Base):
 
     if models.storage_t == 'db':
         __tablename__ = 'contacts'
-        email = Column(String(128), nullable=False)
+
         phone_num = Column(String(128), nullable=True)
         address = Column(String(128), nullable=True)
         state = Column(String(128), nullable=False)
         city = Column(String(128), nullable=True)
         country = Column(String(128), nullable=False)
-        user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
+        customer_id = Column(String(60), ForeignKey('customers.id'), nullable=False)
+
+    else:
+        phone_num = ""
+        address = ""
+        state = ""
+        city = ""
+        country = ""
+
+
+    def __init__(self, *args, **kwargs):
+        """ Initialises a contact object """
+        super().__init__(*args, **kwargs)

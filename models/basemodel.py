@@ -73,3 +73,12 @@ class BaseModel:
     def delete(self):
         """delete the current instance from the storage"""
         models.storage.delete(self)
+
+    def create_account(self, acct_type):
+        random_number = random.randint(0, 999999999)
+        if acct_type == 'savings':
+            acct_number = '1' + str(random_number).zfill(9)
+        elif acct_type == 'current':
+            acct_number = '0' + str(random_number).zfill(9)
+
+        return acct_number
