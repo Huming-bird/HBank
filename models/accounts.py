@@ -1,23 +1,25 @@
 #!/usr/bin/python3
 
-from models.customers import Customer
-import models
+import uuid
+from models.basemodel import Base
 
-class Account(Customer):
-    all_accts = []
+class Account(Base):
+    """
+    this class is a blue print for all account transactions
+    """
 
-    def __init__(self, customer):
-        if isinstance(customer, Customer):
-            self.id = customer.id
-            self.acct_num = customer.acct_num
-            self.acct_bal = 0
-            self.tid_list = []
-            Account.all_accts.append(self)
-        else:
-            return "Kindly provide a valid bank user"
+
+    def __init__(self):
+        """
+        this is a placeholder to ovveride init
+        """
+        pass
 
 
     def deposit(self, amt):
+        """
+        this method allows users to deposit funds
+        """
 
         if isinstance(amt, float) or isinstance(amt, int):
 
@@ -27,7 +29,11 @@ class Account(Customer):
         else:
             return "Pls provide a valid amount"
 
+
     def withdraw(self, amt):
+        """
+        this method allows users to withdraw funds
+        """
 
         if isinstance(amt, float) or isinstance(amt, int):
             if amt > self.acct_bal:
@@ -39,7 +45,11 @@ class Account(Customer):
         else:
             return "Pls provide a valid amount"
 
+
     def transfer(self, amt, acct_number):
+        """
+        this method allows customers to transfer funds
+        """
 
         if not isinstance(amt, float) and not isinstance(amt, int):
             return "Pls enter a valid amount"

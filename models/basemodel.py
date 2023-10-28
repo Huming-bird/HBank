@@ -26,6 +26,8 @@ class BaseModel:
         created_at = Column(DateTime, default=datetime.utcnow)
         updated_at = Column(DateTime, default=datetime.utcnow)
 
+
+
     def __init__(self, *args, **kwargs):
         """Initialization of the base model"""
         if kwargs:
@@ -42,6 +44,7 @@ class BaseModel:
                 self.updated_at = datetime.utcnow()
             if kwargs.get("id", None) is None:
                 self.id = str(uuid.uuid4())
+
         else:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.utcnow()
@@ -50,7 +53,7 @@ class BaseModel:
     def __str__(self):
         """String representation of the BaseModel class"""
         return "[{:s}] ({:s}) {}".format(self.__class__.__name__, self.id,
-                                         self.__dict__)
+                                         self.to_dict())
 
     def save(self):
         """updates the attribute 'updated_at' with the current datetime"""
@@ -68,17 +71,13 @@ class BaseModel:
         new_dict["__class__"] = self.__class__.__name__
         if "_sa_instance_state" in new_dict:
             del new_dict["_sa_instance_state"]
+        k = [key for key in new_dict.keys() if "passwd" in key]
+
+        for i in k:
+            del new_dict[i]  #hides user password
+
         return new_dict
 
     def delete(self):
         """delete the current instance from the storage"""
         models.storage.delete(self)
-
-    def create_account(self, acct_type):
-        random_number = random.randint(0, 999999999)
-        if acct_type == 'savings':
-            acct_number = '1' + str(random_number).zfill(9)
-        elif acct_type == 'current':
-            acct_number = '0' + str(random_number).zfill(9)
-
-        return acct_number
