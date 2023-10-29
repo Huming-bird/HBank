@@ -3,10 +3,10 @@
 this script holds authenticatication class 
 """
 
-from models.basemodel import Base
+from models.basemodel import Base, BaseModel
 from models.checkers import password_check
 
-class Authentication(Base):
+class Authentication:
     """
     instantiates authentication objetcs
     """
@@ -54,7 +54,7 @@ class Authentication(Base):
                 self.password = password
 
 
-    def __init__(self, customer, password):
+    def __init__(self, *args, **kwargs):
         """
         does nothing
         """

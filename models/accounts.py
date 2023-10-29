@@ -1,19 +1,38 @@
 #!/usr/bin/python3
 
 import uuid
-from models.basemodel import Base
+import random
+from models.basemodel import Base, BaseModel
 
-class Account(Base):
+class Account(BaseModel, Base):
     """
     this class is a blue print for all account transactions
     """
 
 
-    def __init__(self):
+    __all_accts = []
+    
+    @staticmethod
+    def create_acct():
+        """
+        this metod creates acct for customers
+        """
+
+        random_number = random.randint(0, 999999999)
+
+        acct_number = '1' + str(random_number).zfill(9)
+        return acct_number
+    
+    
+    def __init__(self, *args, **kwargs):
         """
         this is a placeholder to ovveride init
         """
-        pass
+        super().__init__(*args, **kwargs)
+        Account.__all_accts.append(self)
+        self.__acct_num = self.create_acct()
+        self.__acct_bal = 0
+        self.__tid_list = []
 
 
     def deposit(self, amt):
@@ -23,9 +42,9 @@ class Account(Base):
 
         if isinstance(amt, float) or isinstance(amt, int):
 
-            self.acct_bal += amt
+            self.__acct_bal += amt
             tid = uuid.uuid4()
-            self.tid_list.append({str(tid): ["Credit", str(amt)]})
+            self.__tid_list.append({str(tid): ["Credit", str(amt)]})
         else:
             return "Pls provide a valid amount"
 
@@ -36,12 +55,12 @@ class Account(Base):
         """
 
         if isinstance(amt, float) or isinstance(amt, int):
-            if amt > self.acct_bal:
+            if amt > self.__acct_bal:
                 return "Request declined, Insufficient Balance"
 
-            self.acct_bal -= amt
+            self.__acct_bal -= amt
             tid = uuid.uuid4()
-            self.tid_list.append({str(tid): ["Debit", str(amt)]})
+            self.__tid_list.append({str(tid): ["Debit", str(amt)]})
         else:
             return "Pls provide a valid amount"
 
@@ -54,19 +73,27 @@ class Account(Base):
         if not isinstance(amt, float) and not isinstance(amt, int):
             return "Pls enter a valid amount"
 
-        for obj in Account.all_accts:
-            if self.acct_num == acct_number:
+        for obj in Account.__all_accts:
+            if self.__acct_num == acct_number:
                 return "Transaction not allowed"
-            if obj.acct_num == acct_number:
-                if amt > self.acct_bal:
+            if obj.__acct_num == acct_number:
+                if amt > self.__acct_bal:
                     return "Request declined, Insufficient Balance"
                 else:
-                    obj.acct_bal += amt
+                    obj.__acct_bal += amt
                     tid = uuid.uuid4()
-                    obj.tid_list.append({str(tid): ["Credit", str(amt)]})
+                    obj.__tid_list.append({str(tid): ["Credit", str(amt)]})
                     break
         else:
             return "acct not found"
 
-        self.acct_bal -= amt
-        self.tid_list.append({str(tid): ["Debit", str(amt)]})
+        self.__acct_bal -= amt
+        self.__tid_list.append({str(tid): ["Debit", str(amt)]})
+        
+    @property
+    def tid_list(self):
+        """
+        this method shows customer transaction details
+        """
+        print(f"your acct number is {self.__acct_num} and you have a balance of {self.__acct_bal}")
+        return self.__tid_list

@@ -14,13 +14,13 @@ from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 
 
-class Customer(BaseModel,Authentication, Account):
+class Customer(Account, Authentication):
     """
     this is the blue print for all customer objects
     """
 
     num_of_cust = 0
-    acct_num = ""
+    __acct_num = ""
     first = ""
     last = ""
     dob = ""
@@ -30,17 +30,8 @@ class Customer(BaseModel,Authentication, Account):
     addr = ""
     mid = ""
     __passwd = "Huming100&"
-
-    @staticmethod
-    def create_acct():
-        """
-        this metod creates acct for customers
-        """
-
-        random_number = random.randint(0, 999999999)
-
-        acct_number = '1' + str(random_number).zfill(9)
-        return acct_number
+    
+    
 
     def __init__(self, *args, **kwargs):
         """
@@ -50,7 +41,7 @@ class Customer(BaseModel,Authentication, Account):
         
         super().__init__(*args, **kwargs)
         self.signup(self.__passwd)    #default password to be changed by customer
-        self.acct_num = self.create_acct()
-        self.acct_bal = 0
-        self.tid_list = []
+        # self.__acct_num = self.create_acct()
+        # self.__acct_bal = 0
+        # self.__tid_list = []
         Customer.num_of_cust += 1
