@@ -6,6 +6,7 @@ from datetime import datetime
 import models
 from models.customers import Customer
 from models.basemodel import BaseModel
+from models.contacts import Contact
 import shlex  # for splitting the line along spaces except in double quotes
 
 classes = {"Customer": Customer}
@@ -35,6 +36,16 @@ class HBNBCommand(cmd.Cmd):
                 kvp = arg.split('=', 1)
                 key = kvp[0]
                 value = kvp[1]
+                if value[0] == value[-1] == '"':
+                    value = shlex.split(value)[0].replace('_', ' ')
+                else:
+                    try:
+                        value = int(value)
+                    except:
+                        try:
+                            value = float(value)
+                        except:
+                            continue
                 new_dict[key] = value
         return new_dict
 
@@ -47,11 +58,10 @@ class HBNBCommand(cmd.Cmd):
         if args[0] == "Customer":
             new_dict = self._key_value_parser(args[1:])
             instance = classes[args[0]](**new_dict)
-            instance.create_acct()
         else:
             print("** class doesn't exist **")
             return False
-        print(instance.acct_num)
+        print(instance.id)
         instance.save()
 
     def do_show(self, arg):
@@ -110,10 +120,12 @@ class HBNBCommand(cmd.Cmd):
     def do_update(self, arg):
         """Update an instance based on the class name, id, attribute & value"""
         args = shlex.split(arg)
-        
+        integers = ["number_rooms", "number_bathrooms", "max_guest",
+                    "price_by_night"]
+        floats = ["latitude", "longitude"]
         if len(args) == 0:
             print("** class name missing **")
-        elif args[0] in Customer:
+        elif args[0] in classes:
             if len(args) > 1:
                 k = args[0] + "." + args[1]
                 if k in models.storage.all():
@@ -143,34 +155,6 @@ class HBNBCommand(cmd.Cmd):
         else:
             print("** class doesn't exist **")
 
-    def do_deposit(self, arg):
-        """ this method initiates a deposit for customers """
-        # passwd = input('password: \n')
-        args = shlex.split(arg)
-        for key in models.storage.all():
-            obj = models.storage.all()[key]
-            if obj.acct_num == args[0]:
-                try:
-                    obj.deposit(int(args[1]))
-                    obj.save()
-                except Exception as err:
-                    pass
-
-    
-    def do_withdraw(self, arg):
-        """ this method initiates a withdrawal from customers """
-        # passwd = input('password: \n')
-        args = shlex.split(arg)
-        for key in models.storage.all():
-            obj = models.storage.all()[key]
-            if obj.acct_num == args[0]:
-                try:
-                    obj.withdraw(int(args[1]))
-                    obj.save()
-                except Exception as err:
-                    pass
-        
-
-
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
+

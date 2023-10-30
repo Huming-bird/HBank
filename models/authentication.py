@@ -3,43 +3,59 @@
 this script holds authenticatication class 
 """
 
-from models.basemodel import BaseModel
-from models.customers import Customer
-import models
+from models.basemodel import Base, BaseModel
 from models.checkers import password_check
 
-class Authentication(BaseModel):
+class Authentication:
     """
     instantiates authentication objetcs
     """
-    def signup(self, customer, password):
+    @property
+    def password(self):
+        """does nothing"""
+        pass
+
+    @password.setter
+    def password(self, password):
+        """sets a user password"""
+        self.__passwd = password
+
+
+    def signup(self, password):
         """
         this method will allow customers signup for an acct
         after autheticating their password
         """
 
-        self.id = customer.id
-        self.passwd = password
-
-        if password_check():
-            return True
-        return False
-
-    def login(customer, password):
-        """
-        this method allows users to login to their acct
-        """
-
-        if password_check():
-            if customer._passwd == password:
+        if self.id:
+            if password_check(password):
                 return True
             return False
         return False
 
-    def __init__(self, customer, password):
+    def login(self, password):
         """
-        this metho instantiates an authentication object
+        this method allows users to login to their acct
         """
-        self.id = customer.id
-        self.signup(customer, password)
-        customer._password = password
+
+        if self.id and isinstance(self, Customer):
+            if password_check(password):
+                if self.__passwd == password:
+                    return True
+                return False
+            return False
+
+    def update_password(self, password):
+        """
+        this updates customerpassword
+        """
+        if self.id:
+            if password_check(password):
+                self.password = password
+
+
+    def __init__(self, *args, **kwargs):
+        """
+        does nothing
+        """
+        pass
