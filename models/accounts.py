@@ -82,8 +82,8 @@ class Account():
         """
         this method shows customer transaction details
         """
-        print(f"your acct number is {self.__acct_num}
-              and you have a balance of {self.__acct_bal}")
+        print("your acct number is {} and you have a balance of {}"
+              .format(self.__acct_num, self.__acct_bal))
         return self.__tid_list
 
     @property
