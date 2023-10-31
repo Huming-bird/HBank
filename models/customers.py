@@ -3,29 +3,35 @@
 contains customers model
 """
 
-import models
+import random
 from models.basemodel import BaseModel, Base
+from models.authentication import Authentication
+from models.accounts import Account
 from os import getenv
 import sqlalchemy
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 
 
-class Customer(BaseModel, Base):
-    """Representation of a user """
-    if models.storage_t == 'db':
-        __tablename__ = 'users'
-        email = Column(String(128), nullable=False)
-        password = Column(String(128), nullable=False)
-        first_name = Column(String(128), nullable=False)
-        last_name = Column(String(128), nullable=False)
-        contacts = relationship("Contact", backref="user")
-    else:
-        email = ""
-        password = ""
-        first_name = ""
-        last_name = ""
+class Customer(BaseModel, Account, Authentication, Base):
+    """
+    this is the blue print for all customer objects
+    """
+
+    num_of_cust = 0
+    first = ""
+    last = ""
+    dob = ""
+    sex = ""
+    email = ""
+    phone = ""
+    addr = ""
+    mid = ""
+    __passwd = ""
 
     def __init__(self, *args, **kwargs):
-        """initializes user"""
+        """
+        this method instantiates a customer object
+        """
+
         super().__init__(*args, **kwargs)
