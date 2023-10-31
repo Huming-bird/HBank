@@ -22,14 +22,14 @@ Libraries include
 	./console.py, or python3 console, or python console.
 * Functions to use include:
 <ol>
-<li> create	-	creates a bank customer <br>
-<li> deposit	-	deposits funds to a customer account <br>
-<li> withdraw	-	withdraw money from a customer's account <br>
-<li> transfer	-	transfer money from a customer to another customer <br>
-<li> all		-	shows all customers available in the bank's database <br>
-<li> show		-	shows details about a particular customer <br>
-<li> destroy	-	deletes a customer from the database <br>
-<li> update	-	updates customer information <br>
+<li> 	create	-	creates a bank customer <br>
+<li> 	deposit	-	deposits funds to a customer account <br>
+<li> 	withdraw	-	withdraw money from a customer's account <br>
+<li> 	transfer	-	transfer money from a customer to another customer <br>
+<li>	all	-	shows all customers available in the bank's database <br>
+<li> 	show	-	shows details about a particular customer <br>
+<li> 	destroy	-	deletes a customer from the database <br>
+<li> 	update	-	updates customer information <br>
 </ol>
 
 N.B:	More details about use cases can be found in the tests dir
