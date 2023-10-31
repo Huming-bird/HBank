@@ -9,7 +9,8 @@ from models.customers import Customer
 from models.accounts import Account
 from models.authentication import Authentication
 
-classes = {"BaseModel": BaseModel, "Customer": Customer, "Authentication": Authentication, "Account": Account}
+classes = {"BaseModel": BaseModel, "Customer": Customer,
+           "Authentication": Authentication, "Account": Account}
 
 
 class FileStorage:
