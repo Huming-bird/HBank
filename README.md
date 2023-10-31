@@ -21,14 +21,16 @@ Libraries include
 * execute the console application located in the parent directory (HBank/) either by
 	./console.py, or python3 console, or python console.
 * Functions to use include:
-> create	-	creates a bank customer '\n'
-> deposit	-	deposits funds to a customer account '\n'
-> withdraw	-	withdraw money from a customer's account\n
-> transfer	-	transfer money from a customer to another customer
-> all		-	shows all customers available in the bank's database
-> show		-	shows details about a particular customer
-> destroy	-	deletes a customer from the database
-> update	-	updates customer information
+<ol>
+> create	-	creates a bank customer <br>
+> deposit	-	deposits funds to a customer account <br>
+> withdraw	-	withdraw money from a customer's account <br>
+> transfer	-	transfer money from a customer to another customer <br>
+> all		-	shows all customers available in the bank's database <br>
+> show		-	shows details about a particular customer <br>
+> destroy	-	deletes a customer from the database <br>
+> update	-	updates customer information <br>
+</ol>
 
 N.B:	More details about use cases can be found in the tests dir
 
