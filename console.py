@@ -47,12 +47,15 @@ class HBNBCommand(cmd.Cmd):
         if args[0] == "Customer":
             new_dict = self._key_value_parser(args[1:])
             instance = classes[args[0]](**new_dict)
-            instance.create_acct()
+            if instance.signup():
+                instance.create_acct()
+                print(instance.acct_num)
+                instance.save()
+            else:
+                print('something went wrong')
         else:
             print("** class doesn't exist **")
             return False
-        print(instance.acct_num)
-        instance.save()
 
     def do_show(self, arg):
         """Prints an instance as a string based on the class and id"""
@@ -110,7 +113,7 @@ class HBNBCommand(cmd.Cmd):
     def do_update(self, arg):
         """Update an instance based on the class name, id, attribute & value"""
         args = shlex.split(arg)
-        
+
         if len(args) == 0:
             print("** class name missing **")
         elif args[0] in Customer:
@@ -123,12 +126,12 @@ class HBNBCommand(cmd.Cmd):
                                 if args[2] in integers:
                                     try:
                                         args[3] = int(args[3])
-                                    except:
+                                    except Exception as err:
                                         args[3] = 0
                                 elif args[2] in floats:
                                     try:
                                         args[3] = float(args[3])
-                                    except:
+                                    except Exception as err:
                                         args[3] = 0.0
                             setattr(models.storage.all()[k], args[2], args[3])
                             models.storage.all()[k].save()
@@ -151,12 +154,19 @@ class HBNBCommand(cmd.Cmd):
             obj = models.storage.all()[key]
             if obj.acct_num == args[0]:
                 try:
-                    obj.deposit(int(args[1]))
-                    obj.save()
+                    if obj.login():
+                        obj.deposit(int(args[1]))
+                        obj.save()
+                    else:
+                        print('Login unsuccessful')
+                    break
                 except Exception as err:
-                    pass
+                    print('Unsuccessful, Something went wrong')
+                    break
 
-    
+        else:
+            print('User not found')
+
     def do_withdraw(self, arg):
         """ this method initiates a withdrawal from customers """
         # passwd = input('password: \n')
@@ -165,11 +175,53 @@ class HBNBCommand(cmd.Cmd):
             obj = models.storage.all()[key]
             if obj.acct_num == args[0]:
                 try:
-                    obj.withdraw(int(args[1]))
-                    obj.save()
+                    if obj.login():
+                        obj.withdraw(int(args[1]))
+                        obj.save()
+                    else:
+                        print('Login unsuccessful')
+                    break
                 except Exception as err:
-                    pass
-        
+                    print('Unsuccessful, Something went wrong')
+                    break
+        else:
+            print('User not found')
+
+    def do_transfer(self, arg):
+        """ this method initiates a deposit for customers """
+        # passwd = input('password: \n')
+        args = shlex.split(arg)
+        for key in models.storage.all():
+            obj = models.storage.all()[key]
+            if obj.acct_num == args[0]:
+                for key in models.storage.all():
+                    obj2 = models.storage.all()[key]
+                    if obj2.acct_num == args[1]:
+                        try:
+                            if obj.login():
+                                if obj.withdraw(int(args[2])):
+                                    obj2.deposit(int(args[2]))
+                                    obj.save()
+                                    obj2.save()
+                                else:
+                                    print('withdrawal not succesful')
+                            else:
+                                print('wrong password')
+                            break
+                        except Exception as err:
+                            print('Unsuccessful, Something went wrong')
+                            break
+                else:
+                    print('Receiver acct not found')
+        else:
+            print('user not found')
+
+    def do_password(self, arg):
+        args = shlex.split(arg)
+        for key in models.storage.all():
+            obj = models.storage.all()[key]
+            if obj.acct_num == args[0]:
+                print(obj.password)
 
 
 if __name__ == '__main__':

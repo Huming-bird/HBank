@@ -1,17 +1,15 @@
 #!/usr/bin/python3
+""" this script holds the baseline for account class"""
 
 import uuid
 import random
-# from models.basemodel import Base, BaseModel
+
 
 class Account():
     """
     this class is a blue print for all account transactions
     """
 
-
-    __all_accts = []
-    
     def create_acct(self):
         """
         this metod creates acct for customers
@@ -26,15 +24,12 @@ class Account():
                             'credit': [],
                             'debit': []
                         }
-    
-    
+
     def __init__(self, *args, **kwargs):
         """
         this is a placeholder to ovveride init
         """
         super().__init__(*args, **kwargs)
-        
-      
 
     def deposit(self, amt):
         """
@@ -44,7 +39,6 @@ class Account():
         self.acct_bal += amt
         tid = uuid.uuid4()
         self.__tid_list['credit'].append((str(tid), str(amt)))
-
 
     def withdraw(self, amt):
         """
@@ -57,7 +51,6 @@ class Account():
         self.acct_bal -= amt
         tid = uuid.uuid4()
         self.__tid_list['debit'].append((str(tid), str(amt)))
-
 
     def transfer(self, amt, acct_number):
         """
@@ -83,21 +76,21 @@ class Account():
 
         self.__acct_bal -= amt
         self.__tid_list['credit'].append((str(tid), str(amt)))
-        
+
     @property
     def tid_list(self):
         """
         this method shows customer transaction details
         """
-        print(f"your acct number is {self.__acct_num} and you have a balance of {self.__acct_bal}")
+        print(f"your acct number is {self.__acct_num}
+              and you have a balance of {self.__acct_bal}")
         return self.__tid_list
 
-    
     @property
     def acct_num(self):
         """ this method returns acct_num """
         return self.__acct_num
-    
+
     @property
     def acct_bal(self):
         """this method returns acct_bal"""

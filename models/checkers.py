@@ -5,8 +5,9 @@ This script holds our checker functions
 
 import re
 
+
 def name_check(value):
-    """ function checks the supplied value and 
+    """ function checks the supplied value and
     returns either True if value is a string
     and false if otherwise """
 
@@ -28,6 +29,7 @@ def valid_dob(value):
         return True
     return "enter a valid DOB using YY-MM-DD format"
 
+
 def acct_check(value):
     """
     validates either savings or current acct.
@@ -37,6 +39,7 @@ def acct_check(value):
     if value.lower() == 'savings' or value.lower() == 'current':
         return True
     return "acct type not supported. Use either savings or current"
+
 
 def phone_check(value):
     """
@@ -60,6 +63,7 @@ def addr_check(value):
         return True
     return "enter a valid address"
 
+
 def password_check(password):
     upper, lower = 0, 0
     for i in password:
@@ -67,8 +71,9 @@ def password_check(password):
             upper += 1
         elif i.islower():
             lower += 1
-    al_num=(any(c.isalpha() for c in password) and any(c.isdigit() for c in password))
+    al_num = (any(c.isalpha() for c in password) and
+              any(c.isdigit() for c in password))
 
-    if upper>= 1 and lower>=1 and al_num and len(password)>=8:
+    if upper >= 1 and lower >= 1 and al_num and len(password) >= 8:
         return True
     return False

@@ -26,8 +26,6 @@ class BaseModel:
         created_at = Column(DateTime, default=datetime.utcnow)
         updated_at = Column(DateTime, default=datetime.utcnow)
 
-
-
     def __init__(self, *args, **kwargs):
         """Initialization of the base model"""
         if kwargs:
@@ -74,7 +72,7 @@ class BaseModel:
         k = [key for key in new_dict.keys() if "passwd" in key]
 
         for i in k:
-            del new_dict[i]  #hides user password
+            del new_dict[i]  # hides user password
 
         return new_dict
 
