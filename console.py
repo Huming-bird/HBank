@@ -194,27 +194,31 @@ class HBNBCommand(cmd.Cmd):
         for key in models.storage.all():
             obj = models.storage.all()[key]
             if obj.acct_num == args[0]:
-                for key in models.storage.all():
-                    obj2 = models.storage.all()[key]
-                    if obj2.acct_num == args[1]:
-                        try:
-                            if obj.login():
+                if obj.login():  # for loop needs to be seperated
+                    for key in models.storage.all():
+                        obj2 = models.storage.all()[key]
+                        if obj2.acct_num == args[1]:
+                            try:
                                 if obj.withdraw(int(args[2])):
                                     obj2.deposit(int(args[2]))
                                     obj.save()
                                     obj2.save()
+                                    print("transfer successful")
+                                    break
                                 else:
                                     print('withdrawal not succesful')
-                            else:
-                                print('wrong password')
-                            break
-                        except Exception as err:
-                            print('Unsuccessful, Something went wrong')
-                            break
+                                    break
+                            except Exception as err:
+                                print("Unsuccessful, Something went wrong")
+                                break
+                    else:
+                        print('Receiver acct not found')
+                        break
                 else:
-                    print('Receiver acct not found')
-        else:
-            print('user not found')
+                    print("Login Unsuccessful")
+                break
+            else:
+                print('User not found')
 
     def do_password(self, arg):
         args = shlex.split(arg)
