@@ -39,6 +39,7 @@ class Account():
         self.acct_bal += amt
         tid = uuid.uuid4()
         self.__tid_list['credit'].append((str(tid), str(amt)))
+        return True
 
     def withdraw(self, amt):
         """
@@ -46,11 +47,14 @@ class Account():
         """
 
         if amt > self.acct_bal:
-            return "Request declined, Insufficient Balance"
+            print("Request declined, Insufficient Balance")
+            return False
 
-        self.acct_bal -= amt
-        tid = uuid.uuid4()
-        self.__tid_list['debit'].append((str(tid), str(amt)))
+        else:
+            self.acct_bal -= amt
+            tid = uuid.uuid4()
+            self.__tid_list['debit'].append((str(tid), str(amt)))
+            return True
 
     def transfer(self, amt, acct_number):
         """
