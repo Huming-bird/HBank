@@ -47,12 +47,10 @@ class HBANKCommand(cmd.Cmd):
         if args[0] == "Customer":
             new_dict = self._key_value_parser(args[1:])
             instance = classes[args[0]](**new_dict)
-            if instance.signup():
-                instance.create_acct()
-                print(instance.acct_num)
-                instance.save()
-            else:
-                print('something went wrong')
+            
+            instance.create_acct()
+            print(instance.acct_num)
+            instance.save()
         else:
             print("** class doesn't exist **")
             return False

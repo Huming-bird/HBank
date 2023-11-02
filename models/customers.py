@@ -4,6 +4,7 @@ contains customers model
 """
 
 import random
+import models
 from models.basemodel import BaseModel, Base
 from models.authentication import Authentication
 from models.accounts import Account
@@ -17,17 +18,18 @@ class Customer(BaseModel, Account, Authentication, Base):
     """
     this is the blue print for all customer objects
     """
-
-    num_of_cust = 0
-    first = ""
-    last = ""
-    dob = ""
-    sex = ""
-    email = ""
-    phone = ""
-    addr = ""
-    mid = ""
-    __passwd = ""
+    
+    if models.storage_t == 'db':
+        __tablename__ = 'customers'
+        first = Column(String(128), nullable=False)
+        last = Column(String(128), nullable=False)
+        dob = Column(String(128), nullable=False)
+        sex = Column(String(128), nullable=False)
+        email = Column(String(128), nullable=False)
+        phone = Column(String(128), nullable=True)
+        addr = Column(String(128), nullable=True)
+        mid = Column(String(128), nullable=True)
+        #__passwd = ""
 
     def __init__(self, *args, **kwargs):
         """
