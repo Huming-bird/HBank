@@ -6,6 +6,7 @@ from datetime import datetime
 import models
 from models.customers import Customer
 from models.basemodel import BaseModel
+from models.checkers import password_check
 import shlex  # for splitting the line along spaces except in double quotes
 
 classes = {"Customer": Customer}
@@ -61,40 +62,33 @@ class HBANKCommand(cmd.Cmd):
         """Prints an instance as a string based on the class and id"""
         args = shlex.split(arg)
         if len(args) == 0:
-            print("** class name missing **")
-            return False
-        if args[0] in classes:
-            if len(args) > 1:
-                key = args[0] + "." + args[1]
-                if key in models.storage.all():
-                    print(models.storage.all()[key])
-                else:
-                    print("** no instance found **")
+            print("** acct number missing **")
+        args = shlex.split(arg)
+        for key in models.storage.all():
+            obj = models.storage.all()[key]
+            if obj.acct_num == args[0]:
+                print(obj)
             else:
-                print("** instance id missing **")
-        else:
-            print("** class doesn't exist **")
+                print("** customer not found **")
 
     def do_destroy(self, arg):
-        """Deletes an instance based on the class and id"""
+        """removes an instance from storage"""
         args = shlex.split(arg)
         if len(args) == 0:
-            print("** class name missing **")
-        elif args[0] in classes:
-            if len(args) > 1:
-                key = args[0] + "." + args[1]
-                if key in models.storage.all():
-                    models.storage.all().pop(key)
-                    models.storage.save()
-                else:
-                    print("** no instance found **")
-            else:
-                print("** instance id missing **")
+            print("** acct number missing **")
+        args = shlex.split(arg)
+        for key in models.storage.all():
+            obj = models.storage.all()[key]
+            if obj.acct_num == args[0]:
+                models.storage.all().pop(key)
+                models.storage.save()
+                break
         else:
-            print("** class doesn't exist **")
+            print("** customer not found **")
 
     def do_all(self, arg):
         """Prints string representations of instances"""
+
         args = shlex.split(arg)
         obj_list = []
         if len(args) == 0:
@@ -110,44 +104,10 @@ class HBANKCommand(cmd.Cmd):
         print(", ".join(obj_list), end="")
         print("]")
 
-    def do_update(self, arg):
-        """Update an instance based on the class name, id, attribute & value"""
-        args = shlex.split(arg)
-
-        if len(args) == 0:
-            print("** class name missing **")
-        elif args[0] in Customer:
-            if len(args) > 1:
-                k = args[0] + "." + args[1]
-                if k in models.storage.all():
-                    if len(args) > 2:
-                        if len(args) > 3:
-                            if args[0] == "Place":
-                                if args[2] in integers:
-                                    try:
-                                        args[3] = int(args[3])
-                                    except Exception as err:
-                                        args[3] = 0
-                                elif args[2] in floats:
-                                    try:
-                                        args[3] = float(args[3])
-                                    except Exception as err:
-                                        args[3] = 0.0
-                            setattr(models.storage.all()[k], args[2], args[3])
-                            models.storage.all()[k].save()
-                        else:
-                            print("** value missing **")
-                    else:
-                        print("** attribute name missing **")
-                else:
-                    print("** no instance found **")
-            else:
-                print("** instance id missing **")
-        else:
-            print("** class doesn't exist **")
 
     def do_deposit(self, arg):
         """ this method initiates a deposit for customers """
+
         # passwd = input('password: \n')
         args = shlex.split(arg)
         for key in models.storage.all():
@@ -169,6 +129,7 @@ class HBANKCommand(cmd.Cmd):
 
     def do_withdraw(self, arg):
         """ this method initiates a withdrawal from customers """
+
         # passwd = input('password: \n')
         args = shlex.split(arg)
         for key in models.storage.all():
@@ -189,6 +150,7 @@ class HBANKCommand(cmd.Cmd):
 
     def do_transfer(self, arg):
         """ this method initiates a deposit for customers """
+
         # passwd = input('password: \n')
         args = shlex.split(arg)
         for key in models.storage.all():
@@ -220,13 +182,41 @@ class HBANKCommand(cmd.Cmd):
             else:
                 print('User not found')
 
-    def do_password(self, arg):
+    def do_update_password(self, arg):
+        """ this method updates customer password """
+
         args = shlex.split(arg)
         for key in models.storage.all():
             obj = models.storage.all()[key]
             if obj.acct_num == args[0]:
-                print(obj.password)
+                if password_check(args[1]):
+                    obj.password = args[1]
+                    print(f"Password for acct {args[0]} changed successfully")
+                else:
+                    print("Password change unsuccessful")
+    
+    def do_update_customer(self, arg):
+        """ this method update scustomer details """
 
+        args = shlex.split(arg)
+
+        accept = ['first', 'last', 'mid', 'sex', 'dob', 'phone', 'email']
+
+        for key in models.storage.all():
+            obj = models.storage.all()[key]
+            if obj.acct_num == args[0]:
+                while True:
+                    val = input('What do you want to update or press 7 to exit: ')
+                    if val == '7':
+                        break
+                    if val in accept:
+                        new_val = input('provide new {val}: ')
+                        setattr(obj, val, new_val)
+                        print(f'customer details {val} updated successfully')
+                    else:
+                        print('unacceptable values')
+            else:
+                print('Customer not found')
 
 if __name__ == '__main__':
     HBANKCommand().cmdloop()
