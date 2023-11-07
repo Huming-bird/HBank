@@ -1,0 +1,1 @@
+echo 'create Customer first=Olamide last=Badoo sex=male email=ola.badoo@gmail.com dob=1889 password=Badoo123#' | HBANK_USER=ahmed HBANK_PWD=2062Uba$ HBANK_HOST=localhost HBANK_MYSQL_DB=hbank HBANK_TYPE_STORAGE=db ./console.py

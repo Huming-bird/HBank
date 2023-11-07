@@ -1,18 +1,28 @@
 #!/usr/bin/python3
 """ this script holds the baseline for account class"""
-import json
+
+from models.basemodel import BaseModel, Base
 import uuid
 import random
 import models
 from os import getenv
 import sqlalchemy
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import Column, String, Integer, DateTime
 from sqlalchemy.orm import relationship
 
-class Account():
+class Account(BaseModel, Base):
     """
     this class is a blue print for all account transactions
     """
+
+    if models.storage_t == 'db':
+        __tablename__ = 'accounts'
+        acct_num = Column(String(16), nullable=False)
+        acct_bal = Column(Integer, nullable=True)
+        tid = Column(String(1064), nullable=True)
+        id = Column(String(64), primary_key=True)
+        created_at = Column(DateTime, default=datetime.utcnow)
+        updated_at = Column(DateTime, default=datetime.utcnow)
 
 
     def __init__(self, *args, **kwargs):
@@ -25,10 +35,11 @@ class Account():
         """
         this method allows users to deposit funds
         """
-
+        print('i am iin acct class')
         self.acct_bal += amt
         tid = uuid.uuid4()
-        self.__tid_list['credit'].append((str(tid), str(amt)))
+        self.tid_list['credit'].append((str(tid), str(amt)))
+        print('i am done with deposit')
         return True
 
     def withdraw(self, amt):
@@ -43,7 +54,7 @@ class Account():
         else:
             self.acct_bal -= amt
             tid = uuid.uuid4()
-            self.__tid_list["debit"].append((str(tid), str(amt)))
+            self.tid_list['debit'].append((str(tid), str(amt)))
             return True
 
     def transfer(self, amt, acct_number):
@@ -55,21 +66,21 @@ class Account():
             return "Pls enter a valid amount"
 
         for obj in Account.__all_accts:
-            if self.__acct_num == acct_number:
+            if self.acct_num == acct_number:
                 return "Transaction not allowed"
-            if obj.__acct_num == acct_number:
-                if amt > self.__acct_bal:
+            if obj.acct_num == acct_number:
+                if amt > self.acct_bal:
                     return "Request declined, Insufficient Balance"
                 else:
-                    obj.__acct_bal += amt
+                    obj.acct_bal += amt
                     tid = uuid.uuid4()
-                    obj.__tid_list["debit"].append((str(tid), str(amt)))
+                    obj.tid_list['debit'].append((str(tid), str(amt)))
                     break
         else:
             return "acct not found"
 
-        self.__acct_bal -= amt
-        self.__tid_list['credit'].append((str(tid), str(amt)))
+        self.acct_bal -= amt
+        self.tid_list['credit'].append((str(tid), str(amt)))
 
     def create_acct(self):
         """
@@ -79,33 +90,9 @@ class Account():
         random_number = random.randint(0, 999999999)
 
         acct_number = '1' + str(random_number).zfill(9)
-        self.__acct_num = acct_number
-        self.__acct_bal = 0
-        self.__tid_list = {
-                            "credit": [],
-                            "debit": []
+        self.acct_num = acct_number
+        self.acct_bal = 0
+        self.tid_list = {
+                            'credit': [],
+                            'debit': []
                         }
-
-    @property
-    def tid_list(self):
-        """
-        this method shows customer transaction details
-        """
-        print("your acct number is {} and you have a balance of {}"
-              .format(self.__acct_num, self.__acct_bal))
-        return self.__tid_list
-
-    @property
-    def acct_num(self):
-        """ this method returns acct_num """
-        return self.__acct_num
-
-    @property
-    def acct_bal(self):
-        """this method returns acct_bal"""
-        return self.__acct_bal
-
-    @acct_bal.setter
-    def acct_bal(self, amt):
-        """this method sets acct_bal"""
-        self.__acct_bal = amt

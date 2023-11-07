@@ -65,15 +65,18 @@ def addr_check(value):
 
 
 def password_check(password):
-    upper, lower = 0, 0
+    upper, lower, special = 0, 0, 0
     for i in password:
         if i.isupper():
             upper += 1
         elif i.islower():
             lower += 1
+        elif i in "[!@#$%^&*()_+{}\[\]:;<>,.'?~\\\"-]":
+            special += 1
+
     al_num = (any(c.isalpha() for c in password) and
               any(c.isdigit() for c in password))
 
-    if upper >= 1 and lower >= 1 and al_num and len(password) >= 8:
+    if upper >= 1 and lower >= 1 and special >=1 and al_num and len(password) >= 8:
         return True
     return False

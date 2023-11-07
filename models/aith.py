@@ -21,13 +21,13 @@ class Authentication():
         """sets a user password"""
         self.__passwd = password
 
-    def signup(self, password):
+    def signup(self):
         """
         this method will allow customers signup for an acct
         after autheticating their password
         """
 
-        #password = input('Pls provide a strong password: \n')
+        password = input('Pls provide a strong password: \n')
 
         if password_check(password):
             self.password = password
@@ -35,12 +35,12 @@ class Authentication():
             return True
         return False
 
-    def login(self, password):
+    def login(self):
         """
         this method allows users to login to their acct
         """
 
-        #password = input('Pls provide your password: \n')
+        password = input('Pls provide your password: \n')
 
         if password_check(password):
             if self.password == password:

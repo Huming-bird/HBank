@@ -5,29 +5,32 @@ this script holds authenticatication class
 
 # from models.basemodel import Base, BaseModel
 from models.checkers import password_check
+from models.basemodel import BaseModel, Base
+import models
+from os import getenv
+import sqlalchemy
+from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy.orm import relationship
 
-
-class Authentication():
+class Authentication(BaseModel, Base):
     """
     instantiates authentication objetcs
     """
-    @property
-    def password(self):
-        """does nothing"""
-        return self.__passwd
 
-    @password.setter
-    def password(self, password):
-        """sets a user password"""
-        self.__passwd = password
 
-    def signup(self, password):
+    if models.storage_t == 'db':
+        __tablename__ = 'authentications'
+        
+        password = Column(String(64), nullable=True)
+
+
+    def signup(self):
         """
         this method will allow customers signup for an acct
         after autheticating their password
         """
 
-        #password = input('Pls provide a strong password: \n')
+        password = input('Pls provide a strong password: ')
 
         if password_check(password):
             self.password = password
@@ -35,12 +38,12 @@ class Authentication():
             return True
         return False
 
-    def login(self, password):
+    def login(self):
         """
         this method allows users to login to their acct
         """
 
-        #password = input('Pls provide your password: \n')
+        password = input('Pls provide your password: \n')
 
         if password_check(password):
             if self.password == password:

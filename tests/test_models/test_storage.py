@@ -63,7 +63,6 @@ class test_fileStorage(unittest.TestCase):
             loaded = obj
         self.assertEqual(new.to_dict()['id'], loaded.to_dict()['id'])
 
-
     def test_reload_from_nonexistent(self):
         """ Nothing happens if file does not exist """
         self.assertEqual(storage.reload(), None)

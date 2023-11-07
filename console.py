@@ -45,18 +45,21 @@ class HBANKCommand(cmd.Cmd):
         if len(args) == 0:
             print("** class name missing **")
             return False
-        if args[0] == "Customer":
-            new_dict = self._key_value_parser(args[1:])
-            instance = classes[args[0]](**new_dict)
-            if instance.signup():
-                instance.create_acct()
-                print(instance.acct_num)
-                instance.save()
+        new_dict = self._key_value_parser(args[1:])
+        if new_dict['password']:
+            if args[0] == "Customer":
+                instance = classes[args[0]](**new_dict)
+                if instance.signup(new_dict['password']):
+                    instance.create_acct()
+                    print(instance.acct_num)
+                    instance.save()
+                else:
+                    print('something went wrong')
             else:
-                print('something went wrong')
+                print("** class doesn't exist **")
+                return False
         else:
-            print("** class doesn't exist **")
-            return False
+            print('supply password')
 
     def do_show(self, arg):
         """Prints an instance as a string based on the class and id"""
@@ -68,8 +71,8 @@ class HBANKCommand(cmd.Cmd):
             obj = models.storage.all()[key]
             if obj.acct_num == args[0]:
                 print(obj)
-            else:
-                print("** customer not found **")
+        else:
+            print("** customer not found **")
 
     def do_destroy(self, arg):
         """removes an instance from storage"""
@@ -104,7 +107,6 @@ class HBANKCommand(cmd.Cmd):
         print(", ".join(obj_list), end="")
         print("]")
 
-
     def do_deposit(self, arg):
         """ this method initiates a deposit for customers """
 
@@ -113,16 +115,21 @@ class HBANKCommand(cmd.Cmd):
         for key in models.storage.all():
             obj = models.storage.all()[key]
             if obj.acct_num == args[0]:
-                try:
-                    if obj.login():
-                        obj.deposit(int(args[1]))
-                        obj.save()
-                    else:
-                        print('Login unsuccessful')
-                    break
-                except Exception as err:
-                    print('Unsuccessful, Something went wrong')
-                    break
+                if args[2]:
+                    try:
+                        if obj.login(args[2]):
+                            obj.deposit(int(args[1]))
+                            obj.save()
+                            print('saved')
+                        else:
+                            print('Login unsuccessful')
+                        break
+                    except ValueError as err:
+                        print(err)
+                        #print('Unsuccessful, Something went wrong')
+                        break
+                else:
+                    print('Please supply password')
 
         else:
             print('User not found')
@@ -135,28 +142,35 @@ class HBANKCommand(cmd.Cmd):
         for key in models.storage.all():
             obj = models.storage.all()[key]
             if obj.acct_num == args[0]:
-                try:
-                    if obj.login():
-                        obj.withdraw(int(args[1]))
-                        obj.save()
-                    else:
-                        print('Login unsuccessful')
-                    break
-                except Exception as err:
-                    print('Unsuccessful, Something went wrong')
-                    break
+                if args[2]:
+                    try:
+                        if obj.login(args[2]):
+                            obj.withdraw(int(args[1]))
+                            obj.save()
+                        else:
+                            print('Login unsuccessful')
+                        break
+                    except Exception as err:
+                        print('Unsuccessful, Something went wrong')
+                        break
+                else:
+                    print('Please supply password')
         else:
             print('User not found')
 
     def do_transfer(self, arg):
-        """ this method initiates a deposit for customers """
+        """ this method initiates a deposit for customers 
+        transfer <acct num> <receiving acct num> <amount> <password>"""
 
-        # passwd = input('password: \n')
         args = shlex.split(arg)
+
+        if not args:
+            print('Pls enter transfer <acct num> <receiving acct num>\
+            <amount> <password>')
         for key in models.storage.all():
             obj = models.storage.all()[key]
             if obj.acct_num == args[0]:
-                if obj.login():  # for loop needs to be seperated
+                if obj.login(args[3]):
                     for key in models.storage.all():
                         obj2 = models.storage.all()[key]
                         if obj2.acct_num == args[1]:
@@ -189,12 +203,19 @@ class HBANKCommand(cmd.Cmd):
         for key in models.storage.all():
             obj = models.storage.all()[key]
             if obj.acct_num == args[0]:
-                if password_check(args[1]):
-                    obj.password = args[1]
-                    print(f"Password for acct {args[0]} changed successfully")
+                print('Pls enter your old password')
+                if obj.login(args[2]):
+                    if password_check(args[1]):
+                        obj.password = args[1]
+                        print(f"Password for acct {args[0]} changed successfully")
+                        obj.save()
+                    else:
+                        print("Password change unsuccessful")
                 else:
-                    print("Password change unsuccessful")
-    
+                    print('Invalid password')
+            else:
+                print('Customer not found')
+
     def do_update_customer(self, arg):
         """ this method update scustomer details """
 
@@ -204,19 +225,31 @@ class HBANKCommand(cmd.Cmd):
 
         for key in models.storage.all():
             obj = models.storage.all()[key]
-            if obj.acct_num == args[0]:
+            print('Please enter your password')
+            if obj.acct_num == args[0] and obj.login(args[2]):
                 while True:
-                    val = input('What do you want to update or press 7 to exit: ')
+                    val = input('provide attrib to update (press 7 to exit): ')
                     if val == '7':
                         break
                     if val in accept:
                         new_val = input('provide new {val}: ')
                         setattr(obj, val, new_val)
                         print(f'customer details {val} updated successfully')
+                        obj.save()
                     else:
                         print('unacceptable values')
             else:
                 print('Customer not found')
 
+    def do_reload(self, arg):
+        print('====================')
+        for key, val in models.storage.all().items():
+            print(val)
+    
+
+
 if __name__ == '__main__':
+    print('\n============================')
+    print('\nWELCOME     TO     HBANK\n')
+    print('=============================')
     HBANKCommand().cmdloop()
