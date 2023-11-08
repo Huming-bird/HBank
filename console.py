@@ -46,20 +46,21 @@ class HBANKCommand(cmd.Cmd):
             print("** class name missing **")
             return False
         new_dict = self._key_value_parser(args[1:])
-        if new_dict['password']:
-            if args[0] == "Customer":
-                instance = classes[args[0]](**new_dict)
-                if instance.signup(new_dict['password']):
-                    instance.create_acct()
-                    print(instance.acct_num)
-                    instance.save()
+        try:
+            if 'password' in new_dict.keys():
+                if args[0] == "Customer":
+                    instance = classes[args[0]](**new_dict)
+                    if instance.signup(new_dict['password']):
+                        instance.create_acct()
+                        print(instance.acct_num)
+                        instance.save()
+                    else:
+                        print('something went wrong')
                 else:
-                    print('something went wrong')
+                    print("** class doesn't exist **")
+                    return False
             else:
-                print("** class doesn't exist **")
-                return False
-        else:
-            print('supply password')
+                print('supply password')
 
     def do_show(self, arg):
         """Prints an instance as a string based on the class and id"""
@@ -112,26 +113,24 @@ class HBANKCommand(cmd.Cmd):
 
         # passwd = input('password: \n')
         args = shlex.split(arg)
+        cut = True
         for key in models.storage.all():
             obj = models.storage.all()[key]
             if obj.acct_num == args[0]:
-                if args[2]:
-                    try:
+                try:
+                    if args[2]:
                         if obj.login(args[2]):
                             obj.deposit(int(args[1]))
                             obj.save()
                             print('saved')
+                            cut = False
                         else:
                             print('Login unsuccessful')
                         break
-                    except ValueError as err:
-                        print(err)
-                        #print('Unsuccessful, Something went wrong')
-                        break
-                else:
-                    print('Please supply password')
-
-        else:
+                except Exception as err:
+                    print('Unsuccessful, Something went wrong. Check if you supplied password or incorrect amount value')
+                    break
+        if cut:
             print('User not found')
 
     def do_withdraw(self, arg):

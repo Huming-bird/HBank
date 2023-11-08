@@ -1,0 +1,197 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+body {
+    background-color: #000;
+}
+
+.header {
+    min-height: 80vh;
+    width: 100%;
+    background-image: linear-gradient(rgba(4,9,30,0.7), rgba(4,9,30,0.7)), url(img/hbank2.png);
+    background-position: center;
+    background-size: cover;
+    position: relative;
+}
+
+
+nav {
+    padding: 2% 6%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav img {
+    width: 150px;
+}
+
+.nav-links {
+    flex: 1;
+    text-align: right;
+}
+
+.nav-links li {
+    list-style: none;
+    display: inline-block;
+    padding: 8px 12px;
+    position: relative;
+}
+
+.nav-links li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.nav-links li ::after {
+    content: "";
+    width: 0%;
+    height: 2px;
+    background: #f44336;
+    display: block;
+    margin: auto;
+    transition: 0.5s;
+}
+
+.nav-links li :hover::after {
+    width: 100%;
+}
+
+a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.locate-btn {
+    display: inline-block;
+    text-decoration: none;
+    color: #fff;
+    border: 1px solid #fff;
+    padding: 12px 34px;
+    font-size: 13px;
+    background: transparent;
+    position: relative;
+    cursor: pointer;
+}
+
+.locate-btn:hover {
+    border: 1px solid #5236f4;
+    background: rgba(86, 100, 105, 0.432);
+    transition: 0.8s;
+    color: black;
+}
+
+.transaction {
+    width: 80%;
+    padding-top: 100px;
+    text-align: center;
+    margin: auto;
+    background-color: #faf5f5;
+}
+
+h1 {
+    font-size: 50px;
+    font-weight: 800;
+    color: #fff;
+}
+
+#transactions_header {
+    font-size: 40px;
+    font-weight: 800;
+    color: #CBB26A;
+    text-align: center;
+}
+
+.transactions p {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 22px;
+    padding: 10px;
+    margin: 20px 40px;
+    text-align: justify;
+}
+
+p {
+    color: #CBB26A;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 22px;
+    padding: 10px;
+    text-align: center;
+}
+
+.row {
+    margin-top: 5%;
+    display: flex;
+    justify-content: space-between;
+}
+.transaction_class {
+    flex-basis: 30%;
+    background: #000;
+    border-radius: 10px;
+    margin-bottom: 5%;
+    margin-right: 20px;
+    margin-left: 20px;
+    padding: 20px 20px;
+    box-sizing: border-box;
+}
+
+.transaction_class p {
+    color: #fff;
+    font-size: 15px;
+    text-align: center;
+    font-weight: 300;
+}
+
+h3 {
+    text-align: center;
+    font-weight: 800;
+    margin: 10px 0;
+    color: #CBB26A;
+}
+
+.transaction_class:hover {
+    box-shadow: 0 0 20px 0px rgba(199, 194, 194, 0.2);
+}
+
+.row2 {
+    margin-top: 5%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.pictures {
+    flex-basis: 30%;
+    background: #000;
+    border-radius: 10px;
+    margin-bottom: 5%;
+    margin-right: 20px;
+    margin-left: 20px;
+    padding: 20px 20px;
+    box-sizing: border-box;
+}
+.footer {
+    width: 100%;
+    text-align: center;
+    padding: 30px 0;
+}
+
+.footer h4 {
+    margin-bottom: 25px;
+    margin-top: 20px;
+    font-weight: 600;
+}
+
+.icons .fa {
+    color: #f44336;
+    margin: 0 13px;
+    cursor: pointer;
+    padding: 18px 0;
+}
+                           
