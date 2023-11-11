@@ -18,7 +18,7 @@ class Customer(BaseModel, Account, Authentication, Base):
     """
     this is the blue print for all customer objects
     """
-    
+
     if models.storage_t == 'db':
         __tablename__ = 'customers'
         first = Column(String(128), nullable=False)
@@ -29,7 +29,6 @@ class Customer(BaseModel, Account, Authentication, Base):
         phone = Column(String(128), nullable=True)
         addr = Column(String(128), nullable=True)
         mid = Column(String(128), nullable=True)
-        #__passwd = ""
 
     def __init__(self, *args, **kwargs):
         """
