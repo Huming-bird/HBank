@@ -104,11 +104,9 @@ class HBANKCommand(cmd.Cmd):
         print(", ".join(obj_list), end="")
         print("]")
 
-
     def do_deposit(self, arg):
         """ this method initiates a deposit for customers """
 
-        # passwd = input('password: \n')
         args = shlex.split(arg)
         for key in models.storage.all():
             obj = models.storage.all()[key]
@@ -130,7 +128,6 @@ class HBANKCommand(cmd.Cmd):
     def do_withdraw(self, arg):
         """ this method initiates a withdrawal from customers """
 
-        # passwd = input('password: \n')
         args = shlex.split(arg)
         for key in models.storage.all():
             obj = models.storage.all()[key]
@@ -151,12 +148,11 @@ class HBANKCommand(cmd.Cmd):
     def do_transfer(self, arg):
         """ this method initiates a deposit for customers """
 
-        # passwd = input('password: \n')
         args = shlex.split(arg)
         for key in models.storage.all():
             obj = models.storage.all()[key]
             if obj.acct_num == args[0]:
-                if obj.login():  # for loop needs to be seperated
+                if obj.login():
                     for key in models.storage.all():
                         obj2 = models.storage.all()[key]
                         if obj2.acct_num == args[1]:
@@ -179,8 +175,8 @@ class HBANKCommand(cmd.Cmd):
                 else:
                     print("Login Unsuccessful")
                 break
-            else:
-                print('User not found')
+        else:
+            print('User not found')
 
     def do_update_password(self, arg):
         """ this method updates customer password """
@@ -194,7 +190,7 @@ class HBANKCommand(cmd.Cmd):
                     print(f"Password for acct {args[0]} changed successfully")
                 else:
                     print("Password change unsuccessful")
-    
+
     def do_update_customer(self, arg):
         """ this method update scustomer details """
 
@@ -206,7 +202,7 @@ class HBANKCommand(cmd.Cmd):
             obj = models.storage.all()[key]
             if obj.acct_num == args[0]:
                 while True:
-                    val = input('What do you want to update or press 7 to exit: ')
+                    val = input('Provide details to update(press 7 to exit): ')
                     if val == '7':
                         break
                     if val in accept:
@@ -218,5 +214,10 @@ class HBANKCommand(cmd.Cmd):
             else:
                 print('Customer not found')
 
+
 if __name__ == '__main__':
+    print("==============================")
+    print("Welcome to Hbank.....")
+    print("           keep your funds safe")
+    print("==============================")
     HBANKCommand().cmdloop()
